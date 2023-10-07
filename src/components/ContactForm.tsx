@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { jaJP } from '@mui/x-date-pickers/locales';
 
 import Button from '@mui/material/Button';
@@ -16,11 +16,43 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Fab from '@mui/material/Fab';
 import Link from 'next/link';
 
+// firestore
+import {
+  collection,
+  addDoc,
+  getDoc,
+  // querySnapshot,
+  query,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
+import { db } from '@/libs/firebase';
+
+
+
 export default function ContactForm() {
   const [value, setValue] = useState<Dayjs | null>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (value !== null && name !== '' && email !== '') {
+      await addDoc(collection(db, 'contact'), {
+        name: name.trim(), // 空白文字を削除
+        price: email.trim(),
+      });
+      // データをクリア
+      setValue(null)
+      setName("")
+      setEmail("")
+    }
+  }
+  useEffect(() => {
+
+  }, [])
 
   return (
     <>
@@ -43,6 +75,7 @@ export default function ContactForm() {
                   <input
                     className='border-black/50 bg-white/30 w-full border text-skin-accent'
                     type="text"
+                    // placeholder='名前を入力してください'
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -54,6 +87,7 @@ export default function ContactForm() {
                   <input
                     className='border-black/50 bg-white/30 w-full border text-skin-accent'
                     type="text"
+                    // placeholder='メールアドレスを入力してください'
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -73,7 +107,12 @@ export default function ContactForm() {
                   />
                 </Stack>
               </LocalizationProvider>
-              <Button className='w-full text-center my-4' variant="outlined" endIcon={<SendIcon />}>
+              <Button
+                className='w-full text-center my-4'
+                variant="outlined"
+                endIcon={<SendIcon />}
+                onClick={handleSubmit}
+              >
                 送信
               </Button>
             </div>
