@@ -1,13 +1,11 @@
 "use client"
 
 import dayjs, { Dayjs } from 'dayjs';
-import ja from 'date-fns/locale/ja'
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { jaJP } from '@mui/x-date-pickers/locales';
 
 import Button from '@mui/material/Button';
@@ -15,20 +13,12 @@ import SendIcon from '@mui/icons-material/Send';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Fab from '@mui/material/Fab';
 import Link from 'next/link';
-
-// firestore
 import {
   collection,
   addDoc,
-  getDoc,
-  // querySnapshot,
-  query,
-  onSnapshot,
-  deleteDoc,
-  doc,
 } from 'firebase/firestore';
 import { db } from '@/libs/firebase';
-import { handleSubmit2 } from './SendDB';
+import { Toaster, toast } from 'react-hot-toast';
 
 
 
@@ -38,22 +28,20 @@ export function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  // const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-  //   if (value !== null && name !== '' && email !== '') {
-  //     await addDoc(collection(db, 'contact'), {
-  //       name: name.trim(), // 空白文字を削除
-  //       price: email.trim(),
-  //     });
-  //     // データをクリア
-  //     setValue(null)
-  //     setName("")
-  //     setEmail("")
-  //   }
-  // }
-
-  const submit = handleSubmit2(name, value, email)
-
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (value !== null && name !== '' && email !== '') {
+      await addDoc(collection(db, 'contact'), {
+        name: name.trim(), // 空白文字を削除
+        price: email.trim(),
+      });
+      // データをクリア
+      setValue(null)
+      setName("")
+      setEmail("")
+      toast.success('お問い合わせありがとうございました!!')
+    }
+  }
   return (
     <>
       <div className="flex justify-center items-center h-screen
@@ -111,13 +99,16 @@ export function ContactForm() {
                 className='w-full text-center my-4'
                 variant="outlined"
                 endIcon={<SendIcon />}
-              // onClick={() => submit}
+                onClick={handleSubmit}
               >
                 送信
               </Button>
             </div>
-
           </form>
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+          />
         </div>
       </div>
     </>
