@@ -28,31 +28,31 @@ import {
   doc,
 } from 'firebase/firestore';
 import { db } from '@/libs/firebase';
+import { handleSubmit2 } from './SendDB';
 
 
 
-export default function ContactForm() {
+export function ContactForm() {
   const [value, setValue] = useState<Dayjs | null>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (value !== null && name !== '' && email !== '') {
-      await addDoc(collection(db, 'contact'), {
-        name: name.trim(), // 空白文字を削除
-        price: email.trim(),
-      });
-      // データをクリア
-      setValue(null)
-      setName("")
-      setEmail("")
-    }
-  }
-  useEffect(() => {
+  // const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   if (value !== null && name !== '' && email !== '') {
+  //     await addDoc(collection(db, 'contact'), {
+  //       name: name.trim(), // 空白文字を削除
+  //       price: email.trim(),
+  //     });
+  //     // データをクリア
+  //     setValue(null)
+  //     setName("")
+  //     setEmail("")
+  //   }
+  // }
 
-  }, [])
+  const submit = handleSubmit2(name, value, email)
 
   return (
     <>
@@ -111,7 +111,7 @@ export default function ContactForm() {
                 className='w-full text-center my-4'
                 variant="outlined"
                 endIcon={<SendIcon />}
-                onClick={handleSubmit}
+              // onClick={() => submit}
               >
                 送信
               </Button>
