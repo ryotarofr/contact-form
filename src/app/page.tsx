@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <>
       <Main>
-        {/* <ContactForm /> */}
-        <div>test</div>
+        <ContactForm />
+        {/* <div>test</div> */}
       </Main>
     </>
   )

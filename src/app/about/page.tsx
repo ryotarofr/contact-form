@@ -4,7 +4,8 @@ import { Main } from "@/components/Main";
 export default function About() {
   return (
     <Main>
-      <ContactForm />
+      {/* <ContactForm /> */}
+      <div>about</div>
     </Main>
   )
 }
